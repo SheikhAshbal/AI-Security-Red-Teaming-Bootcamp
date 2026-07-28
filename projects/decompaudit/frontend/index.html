@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DecompAudit — decomposition-leak evaluation harness</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">▓▒░</span>
+    <div>
+      <div class="brand-name">DecompAudit</div>
+      <div class="brand-sub">decomposition-leak evaluation harness</div>
+    </div>
+  </div>
+  <a class="repo-link" href="https://github.com/" target="_blank" rel="noopener">source →</a>
+</header>
+
+<main>
+  <section class="intro">
+    <p class="eyebrow">LLM02 / LLM07 · secret protection under decomposition</p>
+    <h1>No single response leaks the secret.<br>The set of responses does.</h1>
+    <p class="lede">
+      This harness sends a target model a series of individually-innocuous questions —
+      letter count, vowels, first/last letter, ASCII values — that a single-turn content
+      filter would never flag. It then reconstructs the secret from the pieces and measures
+      how much of it survives across four configurations: two model sizes × two guard strengths.
+    </p>
+  </section>
+
+  <section class="grid-select">
+    <h2>Target configuration</h2>
+    <div id="target-grid" class="target-grid"></div>
+    <div class="run-row">
+      <button id="run-all" class="btn-primary">Run full audit (all 4 targets)</button>
+      <span id="status" class="status"></span>
+    </div>
+  </section>
+
+  <section id="results" class="results" hidden>
+    <h2>Results</h2>
+    <div id="summary-table" class="summary-table"></div>
+
+    <h3>Live reconstruction</h3>
+    <div id="reconstruction-panels" class="reconstruction-panels"></div>
+  </section>
+
+  <section class="method">
+    <h2>Method note</h2>
+    <p>
+      Each probe is sent as an independent, single-turn request — the model has no memory
+      of prior probes. This demonstrates the leak works even without a sustained
+      conversation: an attacker needs many short, disposable-looking queries, not one
+      long jailbreak session. Leak strength is reported as an entropy estimate
+      (bits of the secret still unknown) rather than pass/fail, because the vulnerability
+      is fundamentally about information accumulation, not any single response crossing
+      a threshold.
+    </p>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
